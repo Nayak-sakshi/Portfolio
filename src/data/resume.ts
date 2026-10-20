@@ -1,4 +1,6 @@
-export const profile = {
+import type { Content, Education, Profile, Project, Role, SkillGroup, Stat } from "@/lib/types";
+
+export const profile: Profile = {
   name: "Sakshi Nayak",
   role: "Backend Developer",
   tagline: "Node.js · Microservices · Kafka · Distributed Systems",
@@ -11,23 +13,12 @@ export const profile = {
     "Backend developer with 2+ years of experience building Node.js microservices, REST APIs and event-driven systems. I like the parts of software nobody sees: queues that never drop a message, caches that keep databases calm, and APIs that answer before you notice they were asked.",
 };
 
-export const stats = [
+export const stats: Stat[] = [
   { value: 2, suffix: "+", label: "Years building backends" },
   { value: 40, prefix: "~", suffix: "%", label: "DB load cut with Redis caching" },
   { value: 60, suffix: "+", label: "NestJS REST endpoints designed" },
   { value: 200, prefix: "<", suffix: "ms", label: "API responses, down from ~1 s" },
 ];
-
-export type Role = {
-  title: string;
-  company: string;
-  place: string;
-  period: string;
-  current?: boolean;
-  intro?: string;
-  points: string[];
-  stack?: string[];
-};
 
 export const experience: Role[] = [
   {
@@ -71,15 +62,6 @@ export const experience: Role[] = [
   },
 ];
 
-export type Project = {
-  name: string;
-  kind: string;
-  description: string;
-  highlights: string[];
-  stack: string[];
-  metric: { value: string; label: string };
-};
-
 export const projects: Project[] = [
   {
     name: "Squch",
@@ -110,6 +92,22 @@ export const projects: Project[] = [
     metric: { value: "<200ms", label: "API response time" },
   },
   {
+    name: "URL Shortener",
+    kind: "Personal project · Live",
+    description:
+      "A full-stack URL shortener built to practise system design: shorten a link (generated code or custom ending, optional expiry), share it, and watch the clicks come in.",
+    highlights: [
+      "Redirects served from a Redis cache, with MongoDB as the fallback",
+      "Click tracking buffered in Redis and batch-written to MongoDB every minute",
+      "Per-route rate limiting with fixed-window and sliding-window strategies",
+      "JWT accounts, dashboard totals and per-link 7-day analytics",
+      "CI builds the production Docker image and pushes it to Docker Hub",
+    ],
+    stack: ["Node.js", "Express 5", "MongoDB", "Redis", "JWT", "React 19", "Vite", "Docker"],
+    metric: { value: "Live", label: "on Vercel" },
+    link: "https://url-shortener-iota-opal.vercel.app/",
+  },
+  {
     name: "viaSocket Integrations",
     kind: "Workflow automation platform",
     description:
@@ -124,7 +122,7 @@ export const projects: Project[] = [
   },
 ];
 
-export const skills: { group: string; items: string[] }[] = [
+export const skills: SkillGroup[] = [
   { group: "Backend & Architecture", items: ["Node.js", "REST APIs", "Microservices", "Event-Driven Architecture", "System Design", "Socket.io"] },
   { group: "Messaging & Streaming", items: ["Apache Kafka", "Consumer Groups", "Dead-Letter Queues", "Job Queues", "Redis Pub/Sub", "Webhooks"] },
   { group: "Languages & Frameworks", items: ["TypeScript", "JavaScript", "Python", "C++", "Express.js", "NestJS"] },
@@ -133,9 +131,11 @@ export const skills: { group: string; items: string[] }[] = [
   { group: "Security & Auth", items: ["JWT", "Google OAuth", "RBAC", "Rate Limiting", "Input Validation"] },
 ];
 
-export const education = {
+export const education: Education = {
   degree: "B.Tech, Computer Science & Engineering",
   school: "Bansal Institute of Science and Technology, Bhopal",
   period: "2019 — 2023",
   score: "CGPA 8.79",
 };
+
+export const defaultContent: Content = { profile, stats, experience, projects, skills, education };

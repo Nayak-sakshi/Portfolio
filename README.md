@@ -1,36 +1,37 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sakshi Nayak — Portfolio
 
-## Getting Started
+Personal portfolio built with Next.js 15 (App Router), TypeScript and framer-motion, with a small backend:
 
-First, run the development server:
+- **Admin panel** at `/admin` to edit profile, stats, experience, projects, skills and education. Saving revalidates the home page, so changes go live immediately.
+- **Contact form** (`POST /api/contact`) with zod validation, a honeypot and per-IP rate limiting. Messages land in the admin inbox and can also be emailed to you via Resend.
+- **Live GitHub section** showing your most recently pushed public repos (cached for an hour).
+
+## Run locally
 
 ```bash
+npm install
+cp .env.example .env.local   # set ADMIN_PASSWORD and AUTH_SECRET
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000, and http://localhost:3000/admin to edit content.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Without `MONGODB_URI`, content and messages are stored in `.data/*.json`. With no saved content, the site falls back to `src/data/resume.ts`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Deploy (Vercel)
 
-## Learn More
+1. Create a free MongoDB Atlas cluster and copy its connection string.
+2. Import the repo in Vercel and set `ADMIN_PASSWORD`, `AUTH_SECRET` and `MONGODB_URI` (plus `RESEND_API_KEY` if you want email notifications).
+3. Deploy, then sign in at `/admin`. Your first save copies the default content into MongoDB.
 
-To learn more about Next.js, take a look at the following resources:
+## Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Path | What it is |
+|---|---|
+| `src/app/page.tsx` | Home page; reads content from the store |
+| `src/app/admin/` | Login and editor UI |
+| `src/app/api/` | Auth, content, messages and contact routes |
+| `src/lib/store.ts` | MongoDB / JSON-file storage |
+| `src/lib/types.ts` | zod schemas shared by API and UI |
+| `src/middleware.ts` | Protects `/admin` and `/api/admin` with a signed JWT cookie |
+| `src/data/resume.ts` | Default content |

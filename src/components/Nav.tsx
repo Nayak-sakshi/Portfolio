@@ -1,17 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 const links = [
   { id: "about", label: "About" },
   { id: "experience", label: "Experience" },
   { id: "work", label: "Work" },
+  { id: "github", label: "GitHub" },
   { id: "skills", label: "Skills" },
   { id: "contact", label: "Contact" },
 ];
 
-export default function Nav() {
+export default function Nav({ email, showGithub }: { email: string; showGithub: boolean }) {
+  const items = useMemo(() => (showGithub ? links : links.filter((l) => l.id !== "github")), [showGithub]);
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState("");
   const [open, setOpen] = useState(false);
@@ -25,7 +27,7 @@ export default function Nav() {
       (entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id)),
       { rootMargin: "-45% 0px -50% 0px" }
     );
-    links.forEach((l) => {
+    items.forEach((l) => {
       const el = document.getElementById(l.id);
       if (el) observer.observe(el);
     });
@@ -33,7 +35,7 @@ export default function Nav() {
       window.removeEventListener("scroll", onScroll);
       observer.disconnect();
     };
-  }, []);
+  }, [items]);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -48,7 +50,7 @@ export default function Nav() {
         </a>
 
         <nav className="nav-links" aria-label="Primary">
-          {links.map((l) => (
+          {items.map((l) => (
             <a key={l.id} href={`#${l.id}`} className={active === l.id ? "active" : ""}>
               {active === l.id && <motion.span layoutId="nav-pill" className="nav-pill" transition={{ type: "spring", stiffness: 380, damping: 32 }} />}
               <span>{l.label}</span>
@@ -56,7 +58,7 @@ export default function Nav() {
           ))}
         </nav>
 
-        <a href="mailto:nayaksakshi442@gmail.com" className="btn btn-ghost btn-small nav-cta">Let&apos;s talk</a>
+        <a href={`mailto:${email}`} className="btn btn-ghost btn-small nav-cta">Let&apos;s talk</a>
 
         <button className={`burger ${open ? "open" : ""}`} onClick={() => setOpen(!open)} aria-label="Toggle menu" aria-expanded={open}>
           <span />
@@ -67,7 +69,7 @@ export default function Nav() {
       <AnimatePresence>
         {open && (
           <motion.div className="mobile-menu" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            {links.map((l, i) => (
+            {items.map((l, i) => (
               <motion.a
                 key={l.id}
                 href={`#${l.id}`}

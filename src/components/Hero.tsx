@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { profile } from "@/data/resume";
+import type { Profile } from "@/lib/types";
 import SystemDiagram from "./SystemDiagram";
 
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -11,7 +11,9 @@ const rise = (delay: number) => ({
   transition: { duration: 1, delay, ease },
 });
 
-export default function Hero() {
+export default function Hero({ profile }: { profile: Profile }) {
+  const focus = profile.tagline.split("·").map((s) => s.trim()).filter(Boolean);
+
   return (
     <section id="top" className="hero">
       <div className="hero-aura" aria-hidden />
@@ -19,7 +21,7 @@ export default function Hero() {
         <div>
           <motion.p className="badge" {...rise(0.1)}>
             <span className="pulse" />
-            Backend Developer · {profile.location.split(",")[0]}, India
+            {profile.role} · {profile.location.split(",").slice(0, 1).join("")}
           </motion.p>
 
           <h1 className="hero-title">
@@ -31,7 +33,7 @@ export default function Hero() {
           </h1>
 
           <motion.p className="hero-sub" {...rise(0.6)}>
-            I&apos;m <strong>{profile.name}</strong>, a backend developer working with Node.js microservices, Kafka event pipelines
+            I&apos;m <strong>{profile.name}</strong>, a {profile.role.toLowerCase()} working with Node.js microservices, Kafka event pipelines
             and APIs that stay fast when traffic doesn&apos;t stay polite.
           </motion.p>
 
@@ -44,9 +46,9 @@ export default function Hero() {
           </motion.div>
 
           <motion.ul className="hero-meta" {...rise(0.9)}>
-            <li><span className="mono">2+</span> years</li>
-            <li><span className="mono">4</span> microservice modules</li>
-            <li><span className="mono">20+</span> integrations shipped</li>
+            {focus.map((f, i) => (
+              <li key={f}><span className="mono">0{i + 1}</span> {f}</li>
+            ))}
           </motion.ul>
         </div>
 

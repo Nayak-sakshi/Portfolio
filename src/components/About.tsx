@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { animate, useInView } from "framer-motion";
-import { education, profile, stats } from "@/data/resume";
+import type { Content } from "@/lib/types";
 import SectionHeading from "./SectionHeading";
 import Reveal from "./Reveal";
 
@@ -26,7 +26,7 @@ function Counter({ value, prefix = "", suffix = "" }: { value: number; prefix?: 
   );
 }
 
-export default function About() {
+export default function About({ profile, stats, education, now }: Pick<Content, "profile" | "stats" | "education"> & { now?: string }) {
   return (
     <section id="about" className="section">
       <div className="container">
@@ -35,10 +35,7 @@ export default function About() {
         <div className="about-grid">
           <Reveal className="about-copy">
             <p className="lead">{profile.summary}</p>
-            <p>
-              Today I work on event-driven backends at Cyber Infrastructure: Kafka between services, Redis in front of the
-              database, real-time updates over sockets, and CI/CD that gets a release out in about ten minutes.
-            </p>
+            {now && <p>{now}</p>}
             <div className="edu card">
               <p className="mono edu-tag">Education</p>
               <h3>{education.degree}</h3>

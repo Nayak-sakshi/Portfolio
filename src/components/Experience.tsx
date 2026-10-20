@@ -2,11 +2,11 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
-import { experience } from "@/data/resume";
+import type { Role } from "@/lib/types";
 import SectionHeading from "./SectionHeading";
 import Reveal from "./Reveal";
 
-export default function Experience() {
+export default function Experience({ experience }: { experience: Role[] }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 75%", "end 60%"] });
   const scaleY = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
@@ -22,7 +22,7 @@ export default function Experience() {
           </div>
 
           {experience.map((job, i) => (
-            <Reveal key={job.company} delay={0.05} className="tl-item">
+            <Reveal key={`${job.company}-${i}`} delay={0.05} className="tl-item">
               <span className={`tl-dot ${job.current ? "current" : ""}`} aria-hidden />
               <div className="tl-head">
                 <p className="mono tl-period">{job.period}</p>
